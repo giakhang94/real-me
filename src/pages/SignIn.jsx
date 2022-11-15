@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import BtnGoogle from '../components/BtnGoogle';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
 function SignIn() {
     const [showPassword, setShowPassword] = useState(false);
@@ -11,18 +12,33 @@ function SignIn() {
     const [passwordValue, setPasswordValue] = useState('');
     const [data, setData] = useState({ email: '', password: '' });
     const { email, password } = data;
+    const onSubmit = (e) => {
+        e.preventDefault();
+        //xử lý của firebase
+        const auth = getAuth();
+        // signInWithEmailAndPassword(auth, email, password)
+        //     .then((userCredential) => {
+        //         // Signed in
+        //         const user = userCredential.user;
+        //         // ...
+        //     })
+        //     .catch((error) => {
+        //         const errorCode = error.code;
+        //         const errorMessage = error.message;
+        //     });
+    };
     return (
         <>
             <Header />
             <div className="signin">
                 <h2 className="signin__title text-center text-lg font-bold">Sign In</h2>
-                <div className="signin__container">
-                    <div className="signin__img rounded">
+                <div className="signin__container laptop:flex laptop:flex-row mobile:flex mobile:flex-col tablet:flex tablet:flex-row smallmobile:flex smallmobile:flex-col">
+                    <div className="signin__img rounded p-8 laptop:w-2/4  tablet:w-full mobile:w-full smallmoile:w-full">
                         <img src={signInImage} alt="" className="rounded" />
                     </div>
-                    <div className="signin__form w-2/4">
-                        <form action="" className="w-full">
-                            <div className="form__input email">
+                    <div className="signin__form laptop:w-2/4 tablet:w-2/4 mobile:w-full smallmoile:w-full p-8">
+                        <form action="" className="w-full" onSubmit={onSubmit}>
+                            <div className="form__input w-full h-9 p-1 rounded-md mb-5 border border-gray-300 email">
                                 <input
                                     type="text"
                                     placeholder="Email address"
@@ -32,7 +48,7 @@ function SignIn() {
                                     }}
                                 />
                             </div>
-                            <div className="form__input password relative">
+                            <div className="form__input w-full h-9 p-1 rounded-md mb-5 border border-gray-300 password relative">
                                 <input
                                     type={showPassword ? 'text' : 'password'}
                                     placeholder="Password"
@@ -58,28 +74,28 @@ function SignIn() {
                                     />
                                 )}
                             </div>
-                            <div className="form__more">
+                            <div className="form__more flex justify-between">
                                 <span className="more__register">
                                     Don't have an account?{' '}
-                                    <Link className="link" to="/signup">
+                                    <Link className="link text-red-500" to="/signup">
                                         Sign up
                                     </Link>
                                 </span>
                                 <span className="more__forgotpw">
-                                    <Link to="/forgotpassword" className="link">
+                                    <Link to="/forgotpassword" className="link text-blue-600">
                                         Forgot password?
                                     </Link>
                                 </span>
                             </div>
+                            <button
+                                className="form__btn btn-signIn my-5 h-10 w-full text-center text-white text-bold rounded-md bg-blue-600"
+                                onClick={() => {
+                                    setData({ email: { emailValue }, password: { passwordValue } });
+                                }}
+                            >
+                                SIGN IN
+                            </button>
                         </form>
-                        <button
-                            className="form__btn btn-signIn"
-                            onClick={() => {
-                                setData({ email: { emailValue }, password: { passwordValue } });
-                            }}
-                        >
-                            SIGN IN
-                        </button>
                         <div className="flex w-full items-center  my-4 mt-0 before:border-t before:flex-1 before:border-gray-500 after:border-t after:flex-1 after:border-gray-500 or">
                             <p className="text-center font-semibold mx-4">OR</p>
                         </div>

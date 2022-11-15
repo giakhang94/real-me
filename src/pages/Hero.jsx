@@ -3,7 +3,7 @@ import SearchIcon from '@mui/icons-material/Search';
 function Hero() {
     //https://static.rdc.moveaws.com/images/hero/default/2021-11/webp/hp-hero-desktop.webp
     return (
-        <div className="hero">
+        <div className="hero laptop:w-full tablet:w-full mobile:w-full">
             <div className="hero__img">
                 <img
                     src="https://static.rdc.moveaws.com/images/hero/default/2021-11/webp/hp-hero-desktop.webp"
@@ -25,7 +25,7 @@ function Hero() {
                         <li className="navbar__item">HOME VALUE</li>
                     </ul>
                 </div>
-                <div className="hero__search">
+                <div className="hero__search laptop:w-full tablet:w-full mobile:w-2/4">
                     <input
                         type="text"
                         className="search__input"
