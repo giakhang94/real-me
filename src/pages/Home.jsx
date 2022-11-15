@@ -1,7 +1,13 @@
+import Header from '../components/Header';
+import Hero from './Hero';
+
 function Home() {
     return (
         <>
-            <h1>Home</h1>
+            <Header />
+            <div className="main">
+                <Hero />
+            </div>
         </>
     );
 }
