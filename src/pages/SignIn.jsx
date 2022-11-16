@@ -1,21 +1,30 @@
 import Header from '../components/Header';
 import signInImage from '../assets/images/signin.jfif';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import BtnGoogle from '../components/BtnGoogle';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { toast } from 'react-toastify';
 
 function SignIn() {
+    const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
     const [emailValue, setEmailvalue] = useState('');
     const [passwordValue, setPasswordValue] = useState('');
-    const [data, setData] = useState({ email: '', password: '' });
-    const { email, password } = data;
-    const onSubmit = (e) => {
+    const data = { email: emailValue };
+    const onSubmit = async (e) => {
         e.preventDefault();
         //xử lý của firebase
         const auth = getAuth();
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, emailValue, passwordValue);
+            const user = userCredential.user;
+            navigate('/');
+            toast.success('Login successfully');
+        } catch (error) {
+            toast.error('Login not completed, check your email and password');
+        }
         // signInWithEmailAndPassword(auth, email, password)
         //     .then((userCredential) => {
         //         // Signed in
@@ -87,12 +96,7 @@ function SignIn() {
                                     </Link>
                                 </span>
                             </div>
-                            <button
-                                className="form__btn btn-signIn my-5 h-10 w-full text-center text-white text-bold rounded-md bg-blue-600"
-                                onClick={() => {
-                                    setData({ email: { emailValue }, password: { passwordValue } });
-                                }}
-                            >
+                            <button className="form__btn btn-signIn my-5 h-10 w-full text-center text-white text-bold rounded-md bg-blue-600">
                                 SIGN IN
                             </button>
                         </form>
