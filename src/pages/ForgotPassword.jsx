@@ -4,12 +4,26 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import BtnGoogle from '../components/BtnGoogle';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
+import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
+import { toast } from 'react-toastify';
 
 function SignUp() {
     const [emailValue, setEmailvalue] = useState('');
     const [retypeEmail, setRetypeValue] = useState('');
-    const [data, setData] = useState({ email: '', retype: '' });
-    const { email, retype } = data;
+    const auth = getAuth();
+    const handleResetPassword = async (e) => {
+        e.preventDefault();
+        if (retypeEmail === emailValue) {
+            try {
+                await sendPasswordResetEmail(auth, emailValue);
+                toast.success('email sent! s' + 'check your Spam/Promotion/Inbox email');
+            } catch (error) {
+                toast.error(error.code);
+            }
+        } else {
+            toast.error('Email not match');
+        }
+    };
     return (
         <>
             <Header />
@@ -43,26 +57,24 @@ function SignUp() {
                             </div>
                             <div className="form__more   flex justify-between">
                                 <span className="more__register">
-                                    Have an account?{' '}
+                                    Don't have an Account?{' '}
                                     <Link className="link text-red-500" to="/signup">
-                                        Sign in
+                                        Sign up
                                     </Link>
                                 </span>
                                 <span className="more__forgotpw ">
-                                    <Link to="/forgotpassword" className="link text-blue-500">
-                                        Forgot password?
+                                    <Link to="/signin" className="link text-blue-500">
+                                        Or try signing in again
                                     </Link>
                                 </span>
                             </div>
+                            <button
+                                className="form__btn btn-signIn h-10 text-white text-bold text-center w-full bg-blue-600 rounded-md my-5"
+                                onClick={handleResetPassword}
+                            >
+                                RESET YOUR PASSWORD
+                            </button>
                         </form>
-                        <button
-                            className="form__btn btn-signIn h-10 text-white text-bold text-center w-full bg-blue-600 rounded-md my-5"
-                            onClick={() => {
-                                setData({ email: { emailValue }, retype: { retypeEmail } });
-                            }}
-                        >
-                            RESET YOUR PASSWORD
-                        </button>
                         <div className="flex w-full items-center mt-0 my-4 before:border-t before:flex-1 before:border-gray-500 after:border-t after:flex-1 after:border-gray-500 or">
                             <p className="text-center font-semibold mx-4">OR</p>
                         </div>

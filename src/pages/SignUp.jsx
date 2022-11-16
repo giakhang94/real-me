@@ -32,8 +32,8 @@ function SignUp() {
             toast.success('Signup success!');
             navigate('/');
         } catch (error) {
-            toast.error('OOPS! Something went wrong');
-            console.log(error);
+            toast.error(error.code);
+            // console.log(error);
         }
         //ở dưới là code từ thư viện đưa
         // const auth = getAuth();

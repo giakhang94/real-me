@@ -23,7 +23,7 @@ function SignIn() {
             navigate('/');
             toast.success('Login successfully');
         } catch (error) {
-            toast.error('Login not completed, check your email and password');
+            toast.error(error.code);
         }
         // signInWithEmailAndPassword(auth, email, password)
         //     .then((userCredential) => {
