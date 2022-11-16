@@ -10,13 +10,13 @@ function useAuthStatus() {
         console.log('hook auth', auth);
         auth.onAuthStateChanged((user) => {
             if (user) {
-                console.log('tao', user);
+                // console.log('tao', user);
                 setLoggedIn(true);
             }
             setIsChecking(false);
         });
     }, []);
-    console.log(loggedIn);
+    // console.log(loggedIn);
     return { loggedIn, isChecking };
 }
 
