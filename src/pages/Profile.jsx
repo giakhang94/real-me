@@ -3,6 +3,7 @@ import { doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firest
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
+import Header from '../components/Header';
 import { db } from '../firebase';
 
 function Profile() {

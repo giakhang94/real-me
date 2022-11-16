@@ -25,7 +25,7 @@ function Header() {
     };
     return (
         <>
-            <div className="header flex justify-between">
+            <div className="header flex justify-between z-1">
                 <div className="header__left">
                     <div className="header__left-logo">
                         <img

@@ -38,7 +38,6 @@ function SignIn() {
     };
     return (
         <>
-            <Header />
             <div className="signin">
                 <h2 className="signin__title text-center text-lg font-bold">Sign In</h2>
                 <div className="signin__container laptop:flex laptop:flex-row mobile:flex mobile:flex-col tablet:flex tablet:flex-row smallmobile:flex smallmobile:flex-col">

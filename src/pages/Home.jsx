@@ -4,7 +4,6 @@ import Hero from './Hero';
 function Home() {
     return (
         <>
-            <Header />
             <div className="main">
                 <Hero />
             </div>

@@ -10,18 +10,24 @@ import SignIn from './pages/SignIn';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import PrivateRoute from './components/PrivateRoute';
+import Spinner from './components/Spinner';
+import Header from './components/Header';
 
 function App() {
     return (
         <>
             <Router>
+                <Header />
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/signup" element={<SignUp />} />
                     <Route path="/signin" element={<SignIn />} />
                     <Route path="/forgotpassword" element={<ForgotPassword />} />
-                    <Route path="/profile" element={<PrivateRoute />} />
-                    <Route path="ofice" element={<Office />} />
+                    <Route path="profile" element={<PrivateRoute />}>
+                        <Route path="/profile" element={<Profile />} />
+                    </Route>
+                    <Route path="/ofice" element={<Office />} />
+                    <Route path="/spinner" element={<Spinner />} />
                 </Routes>
             </Router>
             <ToastContainer
