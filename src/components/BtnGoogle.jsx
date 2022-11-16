@@ -3,8 +3,10 @@ import { GoogleAuthProvider, getAuth, signInWithPopup } from 'firebase/auth';
 import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router';
 
 function BtnGoogle({ data }) {
+    const navigate = useNavigate();
     const handleGoogleSignUp = () => {
         const provider = new GoogleAuthProvider();
         const auth = getAuth();
@@ -23,6 +25,7 @@ function BtnGoogle({ data }) {
                     setDoc(doc(db, 'users', user.uid), data);
                 }
                 toast.success('Login with google successfully');
+                navigate('/');
             })
             .catch((error) => {
                 // Handle Errors here.
