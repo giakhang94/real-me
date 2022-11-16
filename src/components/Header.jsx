@@ -1,4 +1,5 @@
 import { AiOutlineMenu } from 'react-icons/ai';
+import { Link } from 'react-router-dom';
 function Header() {
     return (
         <>
@@ -49,8 +50,9 @@ function Header() {
                             <li className="menu__item">Officer</li>
                         </ul>
                         <div className="menu__login">
-                            <span className="login__item login__signIn">Sig In</span>
-                            <span className="login__item login__signUp">Sign Up</span>
+                            <Link to="/profile">
+                                <span className="login__item login__signUp">Sign In</span>
+                            </Link>
                         </div>
                     </div>
                 </div>
