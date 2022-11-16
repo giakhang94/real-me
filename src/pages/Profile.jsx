@@ -1,7 +1,9 @@
 import { getAuth, signOut, updateProfile } from 'firebase/auth';
+import { doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
+import { db } from '../firebase';
 
 function Profile() {
     const nameInputRef = useRef();
@@ -34,6 +36,14 @@ function Profile() {
     const handleSetNewName = async () => {
         const auth = getAuth();
         await updateProfile(auth.currentUser, { ...auth.currentUser, displayName: name });
+        //update profile chỉ sửa trên current user của auth;
+        //nó k cập nhật trên table users đã tạo ở các bài trước
+        //=> cần updateDoc để update luôn cái đó
+        //(update k ghi đề toàn bộ đưa cái key nào thì update cái key đó thôi, set ghi đè hết)
+        updateDoc(doc(db, 'users', auth.currentUser.uid), {
+            displayName: name,
+        });
+
         setIsEdit(!isEdit);
     };
     //xu ly cancel thao tac edit displayName
