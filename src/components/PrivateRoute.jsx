@@ -11,7 +11,7 @@ function PrivateRoute() {
     if (authStatus.isChecking) {
         return <Spinner />;
     }
-    return loggedIn ? <Outlet /> : <Navigate to="signin" />;
+    return loggedIn ? <Outlet /> : <Navigate to="/signin" />;
 }
 
 export default PrivateRoute;

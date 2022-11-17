@@ -23,7 +23,7 @@ function App() {
                     <Route path="/signup" element={<SignUp />} />
                     <Route path="/signin" element={<SignIn />} />
                     <Route path="/forgotpassword" element={<ForgotPassword />} />
-                    <Route path="profile" element={<PrivateRoute />}>
+                    <Route path="/profile" element={<PrivateRoute />}>
                         <Route path="/profile" element={<Profile />} />
                     </Route>
                     <Route path="/ofice" element={<Office />} />
@@ -32,7 +32,7 @@ function App() {
             </Router>
             <ToastContainer
                 position="bottom-center"
-                autoClose={2000}
+                autoClose={1000}
                 hideProgressBar={false}
                 newestOnTop={false}
                 closeOnClick

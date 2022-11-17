@@ -5,14 +5,18 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import useAuthStatus from '../hooks/useAuthStatus';
 function Header() {
+    const auth = getAuth();
     const navigate = useNavigate();
     const { loggedIn, isChecking } = useAuthStatus();
     const [isLogIn, setIsLogIn] = useState(loggedIn);
     useEffect(() => {
-        setIsLogIn(loggedIn);
-    }, [loggedIn]);
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                setIsLogIn(true);
+            }
+        });
+    }, []);
     const handleSignOut = async () => {
-        const auth = getAuth();
         alert('tao');
         try {
             await signOut(auth);
@@ -74,9 +78,14 @@ function Header() {
                             </Link>
                         </ul>
                         <div className="menu__login relative">
-                            <Link to="/profile">
-                                <span className="login__item login__signUp">{isLogIn ? 'Profile' : 'Sign In'}</span>
-                            </Link>
+                            <span
+                                className="login__item login__signUp"
+                                onClick={() => {
+                                    navigate('/profile');
+                                }}
+                            >
+                                {isLogIn ? 'Profile' : 'Sign In'}
+                            </span>
                             {isLogIn && (
                                 <span className="text-sm pl-3 cursor-pointer" onClick={handleSignOut}>
                                     Sign Out
