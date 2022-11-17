@@ -6,8 +6,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { getAuth } from 'firebase/auth';
 import { addDoc, collection, doc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebase';
+import { Navigate } from 'react-router';
 
-function CreateListing() {
+function CreateListingTest() {
     //tạo auth
     const auth = getAuth();
     //tạo hook để làm google map (kinh độ, vỹ độ)
@@ -46,38 +47,34 @@ function CreateListing() {
         longitude,
     } = formData;
     const onChange = (e) => {
-        let boolean = null;
+        //onChange này cứ input thay đổi nó sẽ chạy
+        //cài chung cho mọi inpút, chạy hàm if riêng lẻ nên sẽ k bỏ sót case nào
+        //lọt vô case của input nào thìthực thi cái đó, lưu vào state
+        //=========
+        //tạo 1 biến boolean lát diễn giải
+        let boonlean = null;
         if (e.target.value === 'true') {
-            boolean = true;
-            setFormData((prev) => ({
-                ...prev,
-                [e.target.id]: e.target.value,
-            }));
+            boonlean = true;
+            setFormData((prev) => ({ ...prev, [e.target.id]: true }));
         }
         if (e.target.value === 'false') {
-            boolean = false;
-            setFormData((prev) => ({
-                ...prev,
-                [e.target.id]: e.target.value,
-            }));
+            boonlean = false;
+            setFormData((prev) => ({ ...prev, [e.target.id]: false }));
         }
-        //files
+        //kiểm tra upload file
         if (e.target.files) {
-            setFormData((prev) => ({
-                ...prev,
-                images: e.target.files,
-            }));
+            setFormData((prev) => ({ ...prev, images: e.target.files }));
         }
-        //text/boolean/number
+        //xử lý nếu k fải yes/no
         if (!e.target.files) {
-            setFormData((prev) => ({
-                ...prev,
-                [e.target.id]: boolean ?? e.target.value,
-            }));
+            setFormData((prev) => ({ ...prev, [e.target.id]: boonlean ?? e.target.value }));
         }
     };
     async function onSubmit(e) {
+        console.log(images);
         e.preventDefault();
+        //xử lý các điều kiện validate input,
+        //đồng thòiw cho spinner quay, nào xong hêt thì tắt spinner
         setLoading(true);
         if (discount > regularPrice) {
             setLoading(false);
@@ -89,8 +86,10 @@ function CreateListing() {
             toast.error('You uploaded more than 6 photos');
             return;
         }
+        //tạo object chưa định vị gps
         let geolocation = {};
         let location;
+        //auto gps, need a credit cards, i dont use it.
         if (geolocationEnabled) {
             const respone = await fetch(
                 `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${process.env.REACT_APP_GOOGLE_API_KEY}`,
@@ -117,12 +116,12 @@ function CreateListing() {
         //code firebase
 
         // code tay
-        async function storeImage(image) {
+        const storeImage = async (image) => {
             return new Promise((resolve, reject) => {
                 const storage = getStorage();
-                const filename = `${auth.currentUser.uid}-${image.name}-${uuidv4()}`;
+                const filename = `${image.name} - ${uuidv4}`;
                 const storageRef = ref(storage, filename);
-                const uploadTask = uploadBytesResumable(storageRef, image);
+                const uploadTask = uploadBytesResumable(storage, image);
                 uploadTask.on(
                     'state_changed',
                     (snapshot) => {
@@ -151,34 +150,36 @@ function CreateListing() {
                         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
                             console.log('File available at', downloadURL);
                             resolve(downloadURL);
+                            //return download url nhờ hàm resolve cho tụi .then nó bắt về xài
                         });
                     },
                 );
             });
-        }
+        };
         //kiểm tra nêu có lỗi thì toast lỗi rồi ngưng code
         //đồng thời return imgUrls
         const imgUrls = await Promise.all([...images].map((image) => storeImage(image))).catch((error) => {
+            toast.error(error.code);
             setLoading(false);
-            toast.error('images not uploaded');
-            return;
+            Navigate('/');
         });
-        console.log('img', imgUrls);
+
+        //======làm như 2 dòng code bên dưới cũng ok, nhưng k catch dc lỗi
+        // const imgUrls = await Promise.all([...images].map((image) => storeImage(image)));
+        // console.log('img', imgUrls);
         //tạo data để mai mốt render
-        const formDataCopy = {
+        const newData = {
             ...formData,
             imgUrls,
             geolocation,
-            timestamp: serverTimestamp(),
+            timestapm: serverTimestamp(),
         };
-        delete formDataCopy.images;
-        !formDataCopy.offer && delete formDataCopy.discountedPrice;
-        delete formDataCopy.latitude;
-        delete formDataCopy.longitude;
-        //tạo hàm addDoc để add data listing này thành 1 table mới trên firebase
-        const docRef = await addDoc(collection(db, 'listings'), formDataCopy);
+        delete newData.images;
+        delete newData.latitude;
+        delete newData.longitude;
+        const docRef = await addDoc(collection(db, 'listings'), newData);
+        toast.success('data added');
         setLoading(false);
-        toast.success('Data added');
     }
 
     if (loading) {
@@ -453,4 +454,4 @@ function CreateListing() {
         </div>
     );
 }
-export default CreateListing;
+export default CreateListingTest;

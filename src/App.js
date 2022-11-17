@@ -13,6 +13,7 @@ import PrivateRoute from './components/PrivateRoute';
 import Spinner from './components/Spinner';
 import Header from './components/Header';
 import CreateListing from './pages/CreateListing';
+import CreateListingTest from './pages/CreateListingTest';
 
 function App() {
     return (
@@ -29,7 +30,12 @@ function App() {
                     </Route>
                     <Route path="/ofice" element={<Office />} />
                     <Route path="/spinner" element={<Spinner />} />
-                    <Route path="/create-listing" element={<CreateListing />} />
+                    <Route path="/create-listing" element={<PrivateRoute />}>
+                        <Route path="/create-listing" element={<CreateListing />} />
+                    </Route>
+                    <Route path="/create-listing-test" element={<PrivateRoute />}>
+                        <Route path="/create-listing-test" element={<CreateListingTest />} />
+                    </Route>
                 </Routes>
             </Router>
             <ToastContainer
