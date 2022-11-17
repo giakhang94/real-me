@@ -12,6 +12,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import PrivateRoute from './components/PrivateRoute';
 import Spinner from './components/Spinner';
 import Header from './components/Header';
+import CreateListing from './pages/CreateListing';
 
 function App() {
     return (
@@ -28,6 +29,7 @@ function App() {
                     </Route>
                     <Route path="/ofice" element={<Office />} />
                     <Route path="/spinner" element={<Spinner />} />
+                    <Route path="/create-listing" element={<CreateListing />} />
                 </Routes>
             </Router>
             <ToastContainer

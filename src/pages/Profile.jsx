@@ -1,10 +1,12 @@
 import { getAuth, signOut, updateProfile } from 'firebase/auth';
+import { FcHome } from 'react-icons/fc';
 import { doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 import Header from '../components/Header';
 import { db } from '../firebase';
+import { Link } from 'react-router-dom';
 
 function Profile() {
     const nameInputRef = useRef();
@@ -82,7 +84,6 @@ function Profile() {
                             disabled
                             readOnly={true}
                         />
-                        '
                         <div className="edit flex justify-between items-center py-1 px-1">
                             <p className="text-sm px-1 cursor-pointer" onClick={handleChangeName}>
                                 Change your name?
@@ -104,6 +105,15 @@ function Profile() {
                             </p>
                         </div>
                     </form>
+                    <Link to="/create-listing">
+                        <button
+                            type="submit"
+                            className="w-full my-2 flex items-center justify-center bg-blue-500 text-white text-bold py-1 rounded"
+                        >
+                            <FcHome className="mr-2" />
+                            SELL OR RENT YOUR HOME
+                        </button>
+                    </Link>
                 </div>
             </div>
         </>
