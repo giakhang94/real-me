@@ -79,7 +79,7 @@ function CreateListing() {
     async function onSubmit(e) {
         e.preventDefault();
         setLoading(true);
-        if (discount > regularPrice) {
+        if (+discount > +regularPrice) {
             setLoading(false);
             toast.error('discount price needs to be less than regular price');
             return;
@@ -169,6 +169,8 @@ function CreateListing() {
             ...formData,
             imgUrls,
             geolocation,
+            userId: auth.currentUser.uid,
+            userName: auth.currentUser.displayName,
             timestamp: serverTimestamp(),
         };
         delete formDataCopy.images;
@@ -180,7 +182,6 @@ function CreateListing() {
         setLoading(false);
         toast.success('Data added');
     }
-
     if (loading) {
         return <Spinner />;
     }

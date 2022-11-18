@@ -53,21 +53,32 @@ function CreateListingTest() {
         //=========
         //tạo 1 biến boolean lát diễn giải
         let boonlean = null;
+        //kiểm tra các input yes/no
         if (e.target.value === 'true') {
             boonlean = true;
-            setFormData((prev) => ({ ...prev, [e.target.id]: true }));
+            setFormData((prev) => ({
+                ...prev,
+                [e.target.id]: boonlean,
+            }));
+            return;
         }
         if (e.target.value === 'false') {
             boonlean = false;
-            setFormData((prev) => ({ ...prev, [e.target.id]: false }));
+            setFormData((prev) => ({
+                ...prev,
+                [e.target.id]: boonlean,
+            }));
+            return;
         }
-        //kiểm tra upload file
+        //kiểm tra file
         if (e.target.files) {
             setFormData((prev) => ({ ...prev, images: e.target.files }));
+            return;
         }
-        //xử lý nếu k fải yes/no
+        //còn lại (nhập tay, k phải yes/no)
         if (!e.target.files) {
-            setFormData((prev) => ({ ...prev, [e.target.id]: boonlean ?? e.target.value }));
+            setFormData((prev) => ({ ...prev, [e.target.id]: boonlean ?? [e.target.value] }));
+            return;
         }
     };
     async function onSubmit(e) {
@@ -118,10 +129,11 @@ function CreateListingTest() {
         // code tay
         const storeImage = async (image) => {
             return new Promise((resolve, reject) => {
+                //tạo ref để đưa hình lên cloud
                 const storage = getStorage();
-                const filename = `${image.name} - ${uuidv4}`;
+                const filename = `${getAuth().currentUser.uid}-${image.name}-${uuidv4}`;
                 const storageRef = ref(storage, filename);
-                const uploadTask = uploadBytesResumable(storage, image);
+                const uploadTask = uploadBytesResumable(storageRef, image);
                 uploadTask.on(
                     'state_changed',
                     (snapshot) => {
@@ -150,17 +162,17 @@ function CreateListingTest() {
                         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
                             console.log('File available at', downloadURL);
                             resolve(downloadURL);
-                            //return download url nhờ hàm resolve cho tụi .then nó bắt về xài
                         });
                     },
                 );
             });
         };
+        //dùng promise.all để up cả đám lên
         //kiểm tra nêu có lỗi thì toast lỗi rồi ngưng code
         //đồng thời return imgUrls
         const imgUrls = await Promise.all([...images].map((image) => storeImage(image))).catch((error) => {
-            toast.error(error.code);
             setLoading(false);
+            toast.error('upload error');
             Navigate('/');
         });
 

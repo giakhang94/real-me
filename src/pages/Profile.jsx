@@ -1,16 +1,31 @@
 import { getAuth, signOut, updateProfile } from 'firebase/auth';
 import { FcHome } from 'react-icons/fc';
-import { doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
+import {
+    collection,
+    doc,
+    getDocs,
+    orderBy,
+    query,
+    serverTimestamp,
+    setDoc,
+    updateDoc,
+    where,
+} from 'firebase/firestore';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 import Header from '../components/Header';
 import { db } from '../firebase';
 import { Link } from 'react-router-dom';
+import ListingItem from '../components/ListingItem.jsx';
 
 function Profile() {
+    const auth = getAuth();
     const nameInputRef = useRef();
     const [isEdit, setIsEdit] = useState(false);
+    const [listingData, setListingData] = useState([]);
+    const [changeDetail, setChangeDetail] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
     const [formData, setFormData] = useState({ name: 'Khang111', email: 'ngk.khang94@gmail.com111' });
     const { name, email } = formData;
@@ -51,12 +66,33 @@ function Profile() {
     };
     //xu ly cancel thao tac edit displayName
     const handleCancel = () => {
-        const auth = getAuth();
         setFormData((prev) => {
             return { ...prev, name: auth.currentUser.displayName };
         });
         setIsEdit(!isEdit);
     };
+    useEffect(() => {
+        async function fetchUserListings() {
+            const listingRef = collection(db, 'listings');
+            const q = query(listingRef, where('userId', '==', auth.currentUser.uid), orderBy('timestamp', 'desc'));
+            const querySnap = await getDocs(q);
+            let listing = [];
+            // console.log('tao daay', querySnap.json());
+            //getDocs tra ve 1 promise resolve 1 object (bắt bằng await gắn vào querySnap)
+            //dùng forEach lấy ra từng cái rồi nhận data của nó bằng method .data()
+            querySnap.forEach((doc) => {
+                return listing.push({
+                    id: doc.id,
+                    data: doc.data(),
+                });
+            });
+            setListingData(listing);
+            // console.log(listing);
+            setIsLoading(false);
+            console.log(listingData);
+        }
+        fetchUserListings();
+    }, [auth.currentUser.uid]);
     return (
         <>
             <div className="profile min-w-96 w-2/4 mx-auto">
@@ -115,6 +151,18 @@ function Profile() {
                         </button>
                     </Link>
                 </div>
+            </div>
+            <div className="max-w-6xl px-3 mt-6 mx-auto">
+                {!isLoading && listingData.length > 0 && (
+                    <>
+                        <h2 className="text-2xl text-bold text-center">My Listing</h2>
+                        <ul>
+                            {listingData.map((item) => {
+                                return <ListingItem key={item.id} id={item.id} data={item.data} />;
+                            })}
+                        </ul>
+                    </>
+                )}
             </div>
         </>
     );
