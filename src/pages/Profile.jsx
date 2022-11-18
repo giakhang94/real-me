@@ -73,6 +73,11 @@ function Profile() {
     };
     useEffect(() => {
         async function fetchUserListings() {
+            //tạo ref dẫn tới table cần lấy
+            // const ref = collection(db, 'listings');
+            // const q = query(ref, where('userId', '==', auth.currentUser.uid), orderBy('timestamp', 'desc'));
+            // const querySnap = await getDocs(q);
+            // let listing = [];
             const listingRef = collection(db, 'listings');
             const q = query(listingRef, where('userId', '==', auth.currentUser.uid), orderBy('timestamp', 'desc'));
             const querySnap = await getDocs(q);
@@ -89,7 +94,6 @@ function Profile() {
             setListingData(listing);
             // console.log(listing);
             setIsLoading(false);
-            console.log(listingData);
         }
         fetchUserListings();
     }, [auth.currentUser.uid]);
@@ -156,7 +160,7 @@ function Profile() {
                 {!isLoading && listingData.length > 0 && (
                     <>
                         <h2 className="text-2xl text-bold text-center">My Listing</h2>
-                        <ul>
+                        <ul className="grid grid-cols-3">
                             {listingData.map((item) => {
                                 return <ListingItem key={item.id} id={item.id} data={item.data} />;
                             })}
