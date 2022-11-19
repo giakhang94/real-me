@@ -14,6 +14,7 @@ import Spinner from './components/Spinner';
 import Header from './components/Header';
 import CreateListing from './pages/CreateListing';
 import CreateListingTest from './pages/CreateListingTest';
+import EditListing from './pages/EditListing';
 
 function App() {
     return (
@@ -35,6 +36,9 @@ function App() {
                     </Route>
                     <Route path="/create-listing-test" element={<PrivateRoute />}>
                         <Route path="/create-listing-test" element={<CreateListingTest />} />
+                    </Route>
+                    <Route path="/edit-listing" element={<PrivateRoute />}>
+                        <Route path="/edit-listing/:itemID" element={<EditListing />} />
                     </Route>
                 </Routes>
             </Router>
