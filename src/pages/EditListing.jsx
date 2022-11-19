@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Spinner from '../components/Spinner';
 import { toast } from 'react-toastify';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
@@ -9,6 +9,7 @@ import { db } from '../firebase';
 import { useNavigate, useParams } from 'react-router';
 
 function EditListing() {
+    const inputFileRef = useRef();
     //tao nagative
     const navigate = useNavigate();
     //nhận id từ url
@@ -20,6 +21,7 @@ function EditListing() {
     //tạo hook để làm google map (kinh độ, vỹ độ)
     const [geolocationEnabled, setGeolocationEnabled] = useState(false);
     const [listing, setListing] = useState({});
+    const [imgUrls, setImgUrls] = useState([]);
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         type: 'rent',
@@ -97,6 +99,7 @@ function EditListing() {
             }));
         }
         //files
+        // console.log('etartgetfile', e.target.files);
         if (e.target.files) {
             setFormData((prev) => ({
                 ...prev,
@@ -152,70 +155,97 @@ function EditListing() {
         //code firebase
 
         // code tay
-        async function storeImage(image) {
-            return new Promise((resolve, reject) => {
-                const storage = getStorage();
-                const filename = `${auth.currentUser.uid}-${image.name}-${uuidv4()}`;
-                const storageRef = ref(storage, filename);
-                const uploadTask = uploadBytesResumable(storageRef, image);
-                uploadTask.on(
-                    'state_changed',
-                    (snapshot) => {
-                        // Observe state change events such as progress, pause, and resume
-                        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        console.log('Upload is ' + progress + '% done');
-                        switch (snapshot.state) {
-                            case 'paused':
-                                console.log('Upload is paused');
-                                break;
-                            case 'running':
-                                console.log('Upload is running');
-                                break;
-                            default:
-                                break;
-                        }
-                    },
-                    (error) => {
-                        // Handle unsuccessful uploads
-                        reject(error);
-                    },
-                    () => {
-                        // Handle successful uploads on complete
-                        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-                        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                            console.log('File available at', downloadURL);
-                            resolve(downloadURL);
-                        });
-                    },
-                );
+
+        // console.log(inputFileRef.current.files.length);
+        if (inputFileRef.current.files.length > 0) {
+            async function storeImage(image) {
+                return new Promise((resolve, reject) => {
+                    const storage = getStorage();
+                    const filename = `${auth.currentUser.uid}-${image.name}-${uuidv4()}`;
+                    const storageRef = ref(storage, filename);
+                    const uploadTask = uploadBytesResumable(storageRef, image);
+                    uploadTask.on(
+                        'state_changed',
+                        (snapshot) => {
+                            // Observe state change events such as progress, pause, and resume
+                            // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+                            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                            console.log('Upload is ' + progress + '% done');
+                            switch (snapshot.state) {
+                                case 'paused':
+                                    console.log('Upload is paused');
+                                    break;
+                                case 'running':
+                                    console.log('Upload is running');
+                                    break;
+                                default:
+                                    break;
+                            }
+                        },
+                        (error) => {
+                            // Handle unsuccessful uploads
+                            reject(error);
+                        },
+                        () => {
+                            // Handle successful uploads on complete
+                            // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+                            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                                console.log('File available at', downloadURL);
+                                resolve(downloadURL);
+                            });
+                        },
+                    );
+                });
+            }
+            //kiểm tra nêu có lỗi thì toast lỗi rồi ngưng code
+            //đồng thời return imgUrls
+            const imgUrls = await Promise.all([...images].map((image) => storeImage(image))).catch((error) => {
+                setLoading(false);
+                toast.error('images not uploaded');
+                return;
             });
-        }
-        //kiểm tra nêu có lỗi thì toast lỗi rồi ngưng code
-        //đồng thời return imgUrls
-        const imgUrls = await Promise.all([...images].map((image) => storeImage(image))).catch((error) => {
+            console.log('img', imgUrls);
+            const formDataCopy = {
+                ...formData,
+                imgUrls,
+                geolocation,
+                userId: auth.currentUser.uid,
+                userName: auth.currentUser.displayName,
+                timestamp: serverTimestamp(),
+            };
+
+            delete formDataCopy.images;
+
+            !formDataCopy.offer && delete formDataCopy.discountedPrice;
+            delete formDataCopy.latitude;
+            delete formDataCopy.longitude;
+            //tạo hàm addDoc để add data listing này thành 1 table mới trên firebase
+            await updateDoc(doc(db, 'listings', params.itemID), formDataCopy);
             setLoading(false);
-            toast.error('images not uploaded');
-            return;
-        });
-        console.log('img', imgUrls);
-        //tạo data để mai mốt render
-        const formDataCopy = {
-            ...formData,
-            imgUrls,
-            geolocation,
-            userId: auth.currentUser.uid,
-            userName: auth.currentUser.displayName,
-            timestamp: serverTimestamp(),
-        };
-        delete formDataCopy.images;
-        !formDataCopy.offer && delete formDataCopy.discountedPrice;
-        delete formDataCopy.latitude;
-        delete formDataCopy.longitude;
-        //tạo hàm addDoc để add data listing này thành 1 table mới trên firebase
-        const docRef = await updateDoc(collection(db, 'listings', params.itemID), formDataCopy);
-        setLoading(false);
-        toast.success('Data updated');
+            toast.success('Data updated');
+            navigate('/profile');
+        } else {
+            let oldImgUrls = [];
+            oldImgUrls = [...listing.imgUrls];
+
+            const formDataCopy = {
+                ...formData,
+                imgUrls: [...oldImgUrls],
+                geolocation,
+                userId: auth.currentUser.uid,
+                userName: auth.currentUser.displayName,
+                timestamp: serverTimestamp(),
+            };
+            delete formDataCopy.images;
+            !formDataCopy.offer && delete formDataCopy.discountedPrice;
+            delete formDataCopy.latitude;
+            delete formDataCopy.longitude;
+            //tạo hàm addDoc để add data listing này thành 1 table mới trên firebase
+            await updateDoc(doc(db, 'listings', params.itemID), formDataCopy);
+            setLoading(false);
+            toast.success('Data updated');
+            navigate('/profile');
+        }
     }
     if (loading) {
         return <Spinner />;
@@ -470,10 +500,10 @@ function EditListing() {
                     <p className="bed text-lg font-semibold">Image</p>
                     <p className="text-sm text-gray-500">The first image will be the cover - max 6</p>
                     <input
+                        ref={inputFileRef}
                         className="mb-6 mt-2 border border-gray-300 p-2 rounded "
                         type="file"
                         multiple
-                        required
                         id="images"
                         onChange={onChange}
                         accept=".jpg, .png, .jpeg"
@@ -483,7 +513,7 @@ function EditListing() {
                     type="submit"
                     className="mb-6 w-full px-7 py-3 bg-blue-600 text-white font-medium text-sm uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg text-bold"
                 >
-                    CREATE LISTING
+                    UPDATE LISTING
                 </button>
             </form>
         </div>
