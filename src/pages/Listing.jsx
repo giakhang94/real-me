@@ -77,7 +77,7 @@ function Listing() {
                 <MdContentCopy className="cursor-pointer bg-slate-300 opacity-50 text-gray-700 font-bold text-3xl rounded-md fixed top-8 right-[5%]" />
             </div>
             <div className="flex items-center">
-                <div className="flex flex-col w-2/4 p-5">
+                <div className="listing-infomation flex flex-col p-5 laptop:w-2/4 tablet:w-full mobile:w-full smallmobile:w-full">
                     <p className="text-3xl text-blue-800 font-bold mb-6">{listingData.name}</p>
                     <p className="flex items-center mb-6">
                         <MdLocationPin className="text-green-600 mr-1" />
@@ -117,7 +117,9 @@ function Listing() {
                         CONTACT LANDLORD
                     </p>
                 </div>
-                <div>google maps</div>
+                <div className="listing-googlemaps flex flex-col p-5 laptop:w-2/4 tablet:w-full mobile:w-full smallmobile:w-full">
+                    google maps
+                </div>
             </div>
         </div>
     );
