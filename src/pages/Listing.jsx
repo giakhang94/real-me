@@ -6,6 +6,7 @@ import { MdLocationPin } from 'react-icons/md';
 import { FaBed, FaParking } from 'react-icons/fa';
 import { GiBathtub } from 'react-icons/gi';
 import { BsEmojiSunglassesFill } from 'react-icons/bs';
+import { MdContentCopy } from 'react-icons/md';
 import { toast } from 'react-toastify';
 import Spinner from '../components/Spinner';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -18,6 +19,8 @@ import 'swiper/css/pagination';
 function Listing() {
     SwiperCore.use(Autoplay, Navigation, Pagination);
     const params = useParams();
+    //xử lý nhấn nút share hiện thông báo đã copy link trong 2 giây
+    const [isClickCopy, setIsClickCopy] = useState(false);
     const [listingData, setListingData] = useState({});
     const [isLoading, setIsLoading] = useState(true);
     useEffect(() => {
@@ -56,14 +59,31 @@ function Listing() {
                     </SwiperSlide>
                 ))}
             </Swiper>
+            <div
+                className="share-btn"
+                onClick={() => {
+                    navigator.clipboard.writeText(window.location.href);
+                    setIsClickCopy(true);
+                    setTimeout(() => {
+                        setIsClickCopy(false);
+                    }, 2000);
+                }}
+            >
+                {isClickCopy && (
+                    <span className="py-1 px-2 transition-all duration-150 bg-gray-600 opacity-60 text-white font-bold text-lg rounded fixed right-[5%] top-[10%]">
+                        Link copied!
+                    </span>
+                )}
+                <MdContentCopy className="cursor-pointer bg-slate-300 opacity-50 text-gray-700 font-bold text-3xl rounded-md fixed top-8 right-[5%]" />
+            </div>
             <div className="flex items-center">
                 <div className="flex flex-col w-2/4 p-5">
-                    <p className="text-3xl text-blue-800 font-bold mb-3">{listingData.name}</p>
-                    <p className="flex items-center mb-3">
+                    <p className="text-3xl text-blue-800 font-bold mb-6">{listingData.name}</p>
+                    <p className="flex items-center mb-6">
                         <MdLocationPin className="text-green-600 mr-1" />
                         <span className="text-md text-gray-600 font-bold">{listingData.address}</span>
                     </p>
-                    <div className="for-rent-for-sale flex space-x-2 mb-3">
+                    <div className="for-rent-for-sale flex space-x-2 mb-6">
                         <p className="w-2/4 bg-red-800 text-white font-bold text-lg rounded-md py-1 text-center">{`For ${listingData.type}`}</p>
                         {listingData.type === 'rent' && (
                             <p className="w-2/4 bg-green-800 text-white font-bold text-lg rounded-md py-1 text-center">
@@ -71,11 +91,11 @@ function Listing() {
                             </p>
                         )}
                     </div>
-                    <p className="mb-3">
+                    <p className="mb-6">
                         <span className="font-bold">Description - </span>
                         <span>{listingData.description}</span>
                     </p>
-                    <div className="flex justify-between mb-3">
+                    <div className="flex justify-between mb-6">
                         <p className="flex space-x-2 items-center text-sm font-bold">
                             <FaBed />
                             <span>{listingData.bedrooms} beds</span>
