@@ -23,6 +23,6 @@ yarn-debug.log*
 yarn-error.log*
 
 #jpg
-.jpg
+src/assets/images
 #.gitignore
-.gitignore
+/.gitignore
