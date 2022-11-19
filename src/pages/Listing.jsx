@@ -15,8 +15,14 @@ import SwiperCore, { Navigation, Pagination, EffectFade, Autoplay } from 'swiper
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import { getAuth } from 'firebase/auth';
+import Contact from '../components/Contact';
 
 function Listing() {
+    const auth = getAuth();
+    //contact landlord
+    const [contactLandLord, setContactLandLord] = useState(false);
+    //khai bao swiper de lam slier
     SwiperCore.use(Autoplay, Navigation, Pagination);
     const params = useParams();
     //xử lý nhấn nút share hiện thông báo đã copy link trong 2 giây
@@ -35,6 +41,10 @@ function Listing() {
         }
         fetchListing();
     }, [params.listingId]);
+    //xử lý event nhấn send email sẽ hiện lại nút contact và ẩn component
+    const handleShowContactBtn = () => {
+        setContactLandLord(false);
+    };
     if (isLoading) {
         return <Spinner />;
     }
@@ -113,9 +123,23 @@ function Listing() {
                             <span>{listingData.bedrooms} Furnished</span>
                         </p>
                     </div>
-                    <p className="font-bold cursor-pointer text-white text-center text-lg bg-blue-600 rounded-md py-2 w-full">
-                        CONTACT LANDLORD
-                    </p>
+                    {contactLandLord && (
+                        <Contact listingData={listingData} handleShowContactBtn={handleShowContactBtn} />
+                    )}
+                    {!contactLandLord && (
+                        <p
+                            onClick={() => {
+                                if (auth.currentUser.uid !== listingData.userId) {
+                                    setContactLandLord(true);
+                                } else {
+                                    toast.info('You are funny');
+                                }
+                            }}
+                            className="font-bold cursor-pointer text-white text-center text-lg bg-blue-600 rounded-md py-2 w-full"
+                        >
+                            CONTACT LANDLORD
+                        </p>
+                    )}
                 </div>
                 <div className="listing-googlemaps flex flex-col p-5 laptop:w-2/4 tablet:w-full mobile:w-full smallmobile:w-full">
                     google maps
