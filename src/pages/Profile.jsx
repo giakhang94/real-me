@@ -115,7 +115,7 @@ function Profile() {
     return (
         <>
             <div className="profile min-w-96 w-2/4 mx-auto">
-                <h1 className="profile__title text-3xl text-center my-6 font-bold">My Profile</h1>
+                <h1 className="profile__title text-3xl text-center my-6 font-bold tao">My Profile</h1>
                 <div className="profile__form">
                     <form>
                         <input

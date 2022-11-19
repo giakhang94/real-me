@@ -27,7 +27,7 @@ function ListingItem({ data, id, onDelete, onEdit }) {
                     <p className="font-semibold text-sm mb-[2px] text-gray-600 truncate">{data.address}</p>
                 </div>
                 <Link className="contents" to={`/category/${data.type}/${id}`}>
-                    <p className="font-semibold mt-2 text-lg cursor-pointer truncate ">{data.name}</p>
+                    <p className="font-semibold mt-2 text-lg cursor-pointer truncate tao ">{data.name}</p>
                 </Link>
                 <p className="font-semibold mt-2 text-lg text-[#457b9d]">
                     $
