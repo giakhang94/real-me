@@ -2,7 +2,9 @@ import { getAuth, signOut, updateProfile } from 'firebase/auth';
 import { FcHome } from 'react-icons/fc';
 import {
     collection,
+    deleteDoc,
     doc,
+    documentId,
     getDocs,
     orderBy,
     query,
@@ -97,6 +99,19 @@ function Profile() {
         }
         fetchUserListings();
     }, [auth.currentUser.uid]);
+    async function onDelete(itemID) {
+        if (window.confirm('Are you sure delete it?')) {
+            console.log(itemID);
+            await deleteDoc(doc(db, 'listings', itemID));
+            const updatedListings = listingData.filter((listing) => {
+                return listing.id !== itemID;
+            });
+            setListingData(updatedListings);
+        }
+    }
+    function onEdit(itemID) {
+        navigate(`/edit-listing/${itemID}`);
+    }
     return (
         <>
             <div className="profile min-w-96 w-2/4 mx-auto">
@@ -160,9 +175,21 @@ function Profile() {
                 {!isLoading && listingData.length > 0 && (
                     <>
                         <h2 className="text-2xl text-bold text-center">My Listing</h2>
-                        <ul className="grid grid-cols-3">
+                        <ul className="grid smallmobile:grid-cols-1 mobile:grid-cols-1 tablet:grid-cols-3 laptop:grid-cols-4">
                             {listingData.map((item) => {
-                                return <ListingItem key={item.id} id={item.id} data={item.data} />;
+                                return (
+                                    <ListingItem
+                                        key={item.id}
+                                        id={item.id}
+                                        data={item.data}
+                                        onDelete={() => {
+                                            onDelete(item.id);
+                                        }}
+                                        onEdit={() => {
+                                            onEdit(item.id);
+                                        }}
+                                    />
+                                );
                             })}
                         </ul>
                     </>
