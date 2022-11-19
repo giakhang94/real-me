@@ -392,6 +392,7 @@ function EditListing() {
                                 required
                                 min="-90"
                                 max="90"
+                                step="0.01"
                             />
                         </div>
                         <div className="">
@@ -405,6 +406,7 @@ function EditListing() {
                                 required
                                 min="-180"
                                 max="180"
+                                step="0.01"
                             />
                         </div>
                     </div>

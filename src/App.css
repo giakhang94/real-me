@@ -179,3 +179,9 @@
 } */
 /* xử lý login */
 /* từ đoạn này sẽ dùng thư viện tailwindcss */
+/* css maps */
+.leaflet-container {
+    height: 100% !important;
+    border-radius: 10px;
+    box-shadow: 1px 1px 5xp rgba(0, 0, 0, 0.5) !important;
+}

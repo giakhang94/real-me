@@ -17,6 +17,8 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { getAuth } from 'firebase/auth';
 import Contact from '../components/Contact';
+//import thw vien google map react-leaflet
+import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
 
 function Listing() {
     const auth = getAuth();
@@ -70,7 +72,7 @@ function Listing() {
                 ))}
             </Swiper>
             <div
-                className="share-btn"
+                className="share-btn z-[99999999999999999999999] fixed top-8 right-[5%]"
                 onClick={() => {
                     navigator.clipboard.writeText(window.location.href);
                     setIsClickCopy(true);
@@ -86,8 +88,8 @@ function Listing() {
                 )}
                 <MdContentCopy className="cursor-pointer bg-slate-300 opacity-50 text-gray-700 font-bold text-3xl rounded-md fixed top-8 right-[5%]" />
             </div>
-            <div className="flex items-center">
-                <div className="listing-infomation flex flex-col p-5 laptop:w-2/4 tablet:w-full mobile:w-full smallmobile:w-full">
+            <div className="flex mx-20 items-center laptop:flex-row tablet:flex-col mobile:flex-col smallmobile:flex-col">
+                <div className="shadow shadow-gray-300 rounded-md listing-infomation flex flex-col p-5 laptop:w-2/4 tablet:w-full mobile:w-full smallmobile:w-full">
                     <p className="text-3xl text-blue-800 font-bold mb-6">{listingData.name}</p>
                     <p className="flex items-center mb-6">
                         <MdLocationPin className="text-green-600 mr-1" />
@@ -141,8 +143,23 @@ function Listing() {
                         </p>
                     )}
                 </div>
-                <div className="listing-googlemaps flex flex-col p-5 laptop:w-2/4 tablet:w-full mobile:w-full smallmobile:w-full">
-                    google maps
+                <div className=" rounded-lg p-5 h-[350px]  z-10 overflow-x-hidden laptop:w-2/4 tablet:w-full mobile:w-full smallmobile:w-full">
+                    <MapContainer
+                        center={[listingData.geolocation.lat, listingData.geolocation.lng]}
+                        zoom={13}
+                        scrollWheelZoom={false}
+                        style={{ height: '100%' }}
+                    >
+                        <TileLayer
+                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        />
+                        <Marker position={[listingData.geolocation.lat, listingData.geolocation.lng]}>
+                            <Popup>
+                                A pretty CSS3 popup. <br /> Easily customizable.
+                            </Popup>
+                        </Marker>
+                    </MapContainer>
                 </div>
             </div>
         </div>
