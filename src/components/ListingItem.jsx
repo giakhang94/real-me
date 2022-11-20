@@ -4,7 +4,9 @@ import { MdLocationOn } from 'react-icons/md';
 import { FaBed, FaEdit } from 'react-icons/fa';
 import { GiBathtub } from 'react-icons/gi';
 import { AiFillDelete } from 'react-icons/ai';
+import { getAuth } from 'firebase/auth';
 function ListingItem({ data, id, onDelete, onEdit }) {
+    const auth = getAuth();
     return (
         <li className="relative  bg-white flex flex-col justify-between items-center shadow-md hover:shadow-xl rounded-md overflow-hidden transition-shadow duration-150 m-[10px]">
             <Link className="contents" to={`/category/${data.type}/${id}`}>
@@ -52,10 +54,12 @@ function ListingItem({ data, id, onDelete, onEdit }) {
                             </span>
                         </span>
                     </div>
-                    <div className="butons flex items-center text-xs space-x-3">
-                        <FaEdit className="text-green-600 cursor-pointer" onClick={onEdit} />
-                        <AiFillDelete className="text-red-600 cursor-pointer" onClick={onDelete} />
-                    </div>
+                    {auth.currentUser.id === data.userId && (
+                        <div className="butons flex items-center text-xs space-x-3">
+                            <FaEdit className="text-green-600 cursor-pointer" onClick={onEdit} />
+                            <AiFillDelete className="text-red-600 cursor-pointer" onClick={onDelete} />
+                        </div>
+                    )}
                 </div>
             </div>
         </li>

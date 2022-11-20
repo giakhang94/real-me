@@ -32,7 +32,7 @@ function SliderMe() {
     useEffect(() => {
         setNav1(slider1);
         setNav2(slider2);
-    }, []);
+    });
     const settingsMain = {
         slidesToShow: 1,
         slidesToScroll: 1,
@@ -54,32 +54,20 @@ function SliderMe() {
         navigate(`${type}/${id}`);
     };
     return (
-        <div className="sliderMe w-full h-[300px] slider-wrapper">
+        <div className="sliderMe w-full h-[300px] block slider-wrapper">
             <Slider {...settingsMain} asNavFor={nav2} ref={(slider) => setSlider1(slider)}>
                 {listingsData.map((listing, index) => {
                     return (
-                        <>
-                            <div key={index + 'main'}>
-                                <div
-                                    key={listing.id}
-                                    style={{ background: `url(${listing.data.imgUrls[0]}) center` }}
-                                    className="relative"
-                                >
-                                    <img
-                                        src={listing.data.imgUrls[0]}
-                                        alt=""
-                                        className="slick-slide-image h-[350px] w-full object-contain backdrop-blur-sm"
-                                    />
-                                </div>
-
-                                <ClickToView
-                                    key={index + 'click'}
-                                    name={listing.data.name}
-                                    id={listing.id}
-                                    type={listing.data.type}
+                        <div key={index + 'main'}>
+                            <div key={listing.id} style={{ background: `url(${listing.data.imgUrls[0]}) center` }}>
+                                <img
+                                    src={listing.data.imgUrls[0]}
+                                    alt=""
+                                    className="slick-slide-image h-[350px] w-full object-contain backdrop-blur-sm"
                                 />
                             </div>
-                        </>
+                            <ClickToView name={listing.data.name} id={listing.id} type={listing.data.type} />
+                        </div>
                     );
                 })}
             </Slider>
