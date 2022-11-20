@@ -5,7 +5,7 @@ import Home from './pages/Home';
 import SignUp from './pages/SignUp';
 import ForgotPassword from './pages/ForgotPassword';
 import Profile from './pages/Profile';
-import Office from './pages/Office';
+import Offer from './pages/Offer';
 import SignIn from './pages/SignIn';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -32,7 +32,7 @@ function App() {
                     <Route path="/profile" element={<PrivateRoute />}>
                         <Route path="/profile" element={<Profile />} />
                     </Route>
-                    <Route path="/ofice" element={<Office />} />
+                    <Route path="/offer" element={<Offer />} />
                     <Route path="/spinner" element={<Spinner />} />
                     <Route path="/create-listing" element={<PrivateRoute />}>
                         <Route path="/create-listing" element={<CreateListing />} />

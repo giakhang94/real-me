@@ -95,7 +95,7 @@ function Home2() {
                 {!!offerListing && offerListing.length > 0 && (
                     <div className="mt-[210px] mb-6">
                         <h2 className="px-3 text-2xl mt-1 mb-2 font-bold">Recent Offers</h2>
-                        <Link to="/">
+                        <Link to="/offer">
                             <p
                                 className="text-sm text-blue-500 mb-6
                              hover:text-blue-800 hover:font-bold px-3"
