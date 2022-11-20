@@ -185,3 +185,20 @@
     border-radius: 10px;
     box-shadow: 1px 1px 5xp rgba(0, 0, 0, 0.5) !important;
 }
+/* slider using react-slick */
+.thumbnail-slider-wrap {
+    margin-top: 15px;
+    height: 85px;
+}
+.thumbnail-slider-wrap .slick-track .slick-slide {
+    text-align: center;
+}
+.thumbnail-slider-wrap .slick-track .slick-slide img {
+    width: 70%;
+}
+.slick-slide {
+    visibility: hidden;
+}
+.slick-slide.slick-active {
+    visibility: visible;
+}

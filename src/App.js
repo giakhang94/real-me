@@ -16,6 +16,7 @@ import CreateListing from './pages/CreateListing';
 import CreateListingTest from './pages/CreateListingTest';
 import EditListing from './pages/EditListing';
 import Listing from './pages/Listing';
+import Home2 from './pages/Home2';
 
 function App() {
     return (
@@ -23,7 +24,8 @@ function App() {
             <Router>
                 <Header />
                 <Routes>
-                    <Route path="/" element={<Home />} />
+                    <Route path="/" element={<Home2 />} />
+                    <Route path="/home" element={<Home />} />
                     <Route path="/signup" element={<SignUp />} />
                     <Route path="/signin" element={<SignIn />} />
                     <Route path="/forgotpassword" element={<ForgotPassword />} />
