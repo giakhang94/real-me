@@ -60,14 +60,22 @@ function Listing() {
                 modules={[EffectFade]}
                 autoplay={{ delay: 3000 }}
             >
-                {listingData.imgUrls.map((img) => (
-                    <SwiperSlide>
-                        <div
-                            className="w-full overflow-hidden h-[300px]"
-                            style={{
-                                background: `url(${img}) center no-repeat`,
-                            }}
-                        ></div>
+                {listingData.imgUrls.map((img, index) => (
+                    <SwiperSlide key={index + 'swipe'}>
+                        <div className="w-full overflow-hidden h-[320px]">
+                            <div
+                                key={index + 'img'}
+                                className="h-full w-full"
+                                style={{
+                                    background: `url(${img}) center`,
+                                    backgroundSize: 'cover',
+                                }}
+                            >
+                                <div className="backdrop-blur-sm flex justify-center h-full">
+                                    <img src={img} alt="" className="object-contain" />
+                                </div>
+                            </div>
+                        </div>
                     </SwiperSlide>
                 ))}
             </Swiper>
@@ -88,14 +96,16 @@ function Listing() {
                 )}
                 <MdContentCopy className="cursor-pointer bg-slate-300 opacity-50 text-gray-700 font-bold text-3xl rounded-md fixed top-8 right-[5%]" />
             </div>
-            <div className="flex mx-20 items-center laptop:flex-row tablet:flex-col mobile:flex-col smallmobile:flex-col">
+            <div className="listing-info flex laptop:mx-20 tablet:mx-20 mobile:mx-5 smallmobile:mx-5 items-center laptop:flex-row tablet:flex-col mobile:flex-col smallmobile:flex-col">
                 <div className="shadow shadow-gray-300 rounded-md listing-infomation flex flex-col p-5 laptop:w-2/4 tablet:w-full mobile:w-full smallmobile:w-full">
-                    <p className="text-3xl text-blue-800 font-bold mb-6">{listingData.name}</p>
-                    <p className="flex items-center mb-6">
+                    <p className="tablet:text-2xl laptop:text-3xl mobile:text-md smallmobile:text-md text-blue-800 font-bold laptop:mb-6 tablet:mb-6 mobile:mb-2 smallmobile:mb-2">
+                        {listingData.name}
+                    </p>
+                    <p className="flex items-center laptop:mb-6 tablet:mb-6 mobile:mb-2 smallmobile:mb-2 tablet:text-lg laptop:text-lg mobile:text-xs smallmobile:text-xs">
                         <MdLocationPin className="text-green-600 mr-1" />
                         <span className="text-md text-gray-600 font-bold">{listingData.address}</span>
                     </p>
-                    <div className="for-rent-for-sale flex space-x-2 mb-6">
+                    <div className="for-rent-for-sale flex space-x-2 laptop:mb-6 tablet:mb-6 mobile:mb-2 smallmobile:mb-2">
                         <p className="w-2/4 bg-red-800 text-white font-bold text-lg rounded-md py-1 text-center">{`For ${listingData.type}`}</p>
                         {listingData.type === 'rent' && (
                             <p className="w-2/4 bg-green-800 text-white font-bold text-lg rounded-md py-1 text-center">
@@ -103,24 +113,24 @@ function Listing() {
                             </p>
                         )}
                     </div>
-                    <p className="mb-6">
-                        <span className="font-bold">Description - </span>
+                    <p className="laptop:mb-6 tablet:mb-6 mobile:mb-2 smallmobile:mb-2 tablet:text-md laptop:text-md mobile:text-sm smallmobile:text-sm">
+                        <span className="font-bold ">Description - </span>
                         <span>{listingData.description}</span>
                     </p>
-                    <div className="flex justify-between mb-6">
-                        <p className="flex space-x-2 items-center text-sm font-bold">
+                    <div className="flex justify-between laptop:mb-6 tablet:mb-6 mobile:mb-2 smallmobile:mb-2 tablet:text-md laptop:text-md mobile:text-xs smallmobile:text-xs">
+                        <p className="flex space-x-2 items-center  font-bold">
                             <FaBed />
                             <span>{listingData.bedrooms} beds</span>
                         </p>
-                        <p className="flex space-x-2 items-center text-sm font-bold">
+                        <p className="flex space-x-2 items-center  font-bold">
                             <GiBathtub />
                             <span>{listingData.bedrooms} baths</span>
                         </p>
-                        <p className="flex space-x-2 items-center text-sm font-bold">
+                        <p className="flex space-x-2 items-center  font-bold">
                             <FaParking />
                             <span>{listingData.bedrooms} Parking</span>
                         </p>
-                        <p className="flex space-x-2 items-center text-sm font-bold">
+                        <p className="flex space-x-2 items-center  font-bold">
                             <BsEmojiSunglassesFill />
                             <span>{listingData.bedrooms} Furnished</span>
                         </p>
@@ -131,10 +141,14 @@ function Listing() {
                     {!contactLandLord && (
                         <p
                             onClick={() => {
-                                if (auth.currentUser.uid !== listingData.userId) {
-                                    setContactLandLord(true);
+                                if (auth.currentUser == null) {
+                                    toast.info('Please sign in first');
                                 } else {
-                                    toast.info('You are funny');
+                                    if (auth.currentUser.uid !== listingData.userId) {
+                                        setContactLandLord(true);
+                                    } else {
+                                        toast.info('You are funny');
+                                    }
                                 }
                             }}
                             className="font-bold cursor-pointer text-white text-center text-lg bg-blue-600 rounded-md py-2 w-full"
@@ -155,9 +169,7 @@ function Listing() {
                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         />
                         <Marker position={[listingData.geolocation.lat, listingData.geolocation.lng]}>
-                            <Popup>
-                                A pretty CSS3 popup. <br /> Easily customizable.
-                            </Popup>
+                            <Popup>{listingData.name}</Popup>
                         </Marker>
                     </MapContainer>
                 </div>

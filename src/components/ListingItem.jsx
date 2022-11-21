@@ -56,7 +56,7 @@ function ListingItem({ data, id, onDelete, onEdit }) {
                         </span>
                     </div>
                     {/* !!auth.currentUser.id && auth.currentUser.id === data.userId */}
-                    {auth.currentUser && auth.currentUser.id === data.userId && (
+                    {!!auth.currentUser && (
                         <div className="butons flex items-center text-xs space-x-3">
                             <FaEdit className="text-green-600 cursor-pointer" onClick={onEdit} />
                             <AiFillDelete className="text-red-600 cursor-pointer" onClick={onDelete} />

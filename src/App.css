@@ -202,3 +202,16 @@
 .slick-slide.slick-active {
     visibility: visible;
 }
+/* css cho mobile menu */
+.mobile-menu:hover .sub-container {
+    display: block;
+}
+.mobile-row1::after {
+    content: '';
+    display: block;
+    width: 80%;
+    height: 1px;
+    background-color: rgba(0, 0, 0, 0.3);
+    color: rgba(0, 0, 0, 0.3);
+}
+/* css img swiper */

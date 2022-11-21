@@ -115,7 +115,7 @@ function Home2() {
                 {!!rentListing && rentListing.length > 0 && (
                     <div className=" mb-6">
                         <h2 className="px-3 text-2xl mt-1 mb-2 font-bold">Recent Rents</h2>
-                        <Link to="/">
+                        <Link to="/rent">
                             <p
                                 className="text-sm text-blue-500 mb-6
                              hover:text-blue-800 hover:font-bold px-3"
@@ -135,7 +135,7 @@ function Home2() {
                 {!!saleListing && saleListing.length > 0 && (
                     <div className=" mb-6">
                         <h2 className="px-3 text-2xl mt-1 mb-2 font-bold">Recent Sales</h2>
-                        <Link to="/">
+                        <Link to="/sale">
                             <p
                                 className="text-sm text-blue-500 mb-6
                              hover:text-blue-800 hover:font-bold px-3"

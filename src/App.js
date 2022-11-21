@@ -17,6 +17,9 @@ import CreateListingTest from './pages/CreateListingTest';
 import EditListing from './pages/EditListing';
 import Listing from './pages/Listing';
 import Home2 from './pages/Home2';
+import Rent from './pages/Rent';
+import Sale from './pages/Sale';
+import Footer from './components/Footer';
 
 function App() {
     return (
@@ -28,6 +31,8 @@ function App() {
                     <Route path="/home" element={<Home />} />
                     <Route path="/signup" element={<SignUp />} />
                     <Route path="/signin" element={<SignIn />} />
+                    <Route path="/rent" element={<Rent />} />
+                    <Route path="/Sale" element={<Sale />} />
                     <Route path="/forgotpassword" element={<ForgotPassword />} />
                     <Route path="/profile" element={<PrivateRoute />}>
                         <Route path="/profile" element={<Profile />} />
@@ -45,6 +50,7 @@ function App() {
                     </Route>
                     <Route path="/category/:categoryName/:listingId" element={<Listing />} />
                 </Routes>
+                <Footer />
             </Router>
             <ToastContainer
                 position="bottom-center"

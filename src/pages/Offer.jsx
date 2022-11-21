@@ -16,7 +16,7 @@ function Offer() {
                 //get reference
                 const ref = collection(db, 'listings');
                 //create query
-                const q = query(ref, where('offer', '==', true), orderBy('timestamp', 'desc'), limit(1));
+                const q = query(ref, where('offer', '==', true), orderBy('timestamp', 'desc'), limit(8));
                 //execute the query
                 const list = [];
                 const querySnap = await getDocs(q);
@@ -47,7 +47,7 @@ function Offer() {
                 where('offer', '==', true),
                 orderBy('timestamp', 'desc'),
                 startAfter(lastFetchedListings),
-                limit(1),
+                limit(4),
             );
             //execute the query
             const list = [];
@@ -91,6 +91,11 @@ function Offer() {
                         </div>
                     )}
                 </>
+            )}
+            {lastFetchedListings === undefined ? (
+                <p className="mt-6 text-center font-bold">Oh! That's all for today. Please comeback later..</p>
+            ) : (
+                ''
             )}
         </div>
     );

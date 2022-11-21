@@ -6,8 +6,10 @@ import { v4 as uuidv4 } from 'uuid';
 import { getAuth } from 'firebase/auth';
 import { addDoc, collection, doc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebase';
+import { useNavigate } from 'react-router';
 
 function CreateListing() {
+    const navigate = useNavigate();
     //tạo auth
     const auth = getAuth();
     //tạo hook để làm google map (kinh độ, vỹ độ)
@@ -181,6 +183,7 @@ function CreateListing() {
         const docRef = await addDoc(collection(db, 'listings'), formDataCopy);
         setLoading(false);
         toast.success('Data added');
+        navigate('/profile');
     }
     if (loading) {
         return <Spinner />;
